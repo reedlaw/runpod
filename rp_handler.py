@@ -1,16 +1,20 @@
 import runpod
 import time
+import spacy
+from spacy.matcher import Matcher
 
 def handler(event):
     input = event['input']
-    instruction = input.get('instruction')
-    seconds = input.get('seconds', 0)
+    nlp = spacy.load("en_core_web_sm")
+    matcher = Matcher(nlp.vocab)
+    # Add match ID "HelloWorld" with no callback and one pattern
+    pattern = [{"LOWER": "hello"}, {"IS_PUNCT": True}, {"LOWER": "world"}]
+    matcher.add("HelloWorld", [pattern])
 
-    # Placeholder for a task; replace with image or text generation logic as needed
-    time.sleep(seconds)
-    result = instruction.replace(instruction.split()[0], 'created', 1)
+    doc = nlp("Hello, world! Hello world!")
+    matches = matcher(doc)
 
-    return result
+    return matches
 
 if __name__ == '__main__':
     runpod.serverless.start({'handler': handler})
