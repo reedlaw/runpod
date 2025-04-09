@@ -7,7 +7,7 @@ def handler(event):
     nlp = spacy.load("en_core_web_lg")
     doc = nlp(input['prompt'])
     ents = []
-    for ent in doc_en.ents:
+    for ent in doc.ents:
         ents.append({"text": ent.text, "label_": ent.label_})
     return ents
 
